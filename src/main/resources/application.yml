@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: task-tracker-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task-tracker
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+#      hbm2ddl.auto: validate
+      hbm2ddl.auto: update
+security:
+  jwt:
+    access_token:
+      expiration: PT15M # 15 minutes
+      secret_key: aa930725a201517b4472e8882ed02df2b330badac9c315791f7c57b03626bf814d2758d3e1a0dfc6abfd52e51d00604ee8e48a12fb7051c6f3b5b122a9bdfb76ccc11a59595de588c33120ef982048ca8711106fbb6d9e80db4ebcc3155c3ccf45d24b37e8c02c93bdb11c8d108b3a17a1717dedaca87582df1adfb61662f28d95f85990e34cba2917b732bc7570a84c8e216cf4d17fd53c3d951fcae832c14c5f400ac2127f47d5b5c33eafd09b15cb2aa92924e135fdecec6cfa134d2c1f979aaa064812b6ca446a2e0505cb46cd2722941939650256bfe4d47372e433fd89fb6bc90a77bd8e139b943ce5e3f12d90f421cdc8294c468b26b890993c04248b # 256 bit
+    refresh_token:
+      expiration: P30D # 30 days
+
+  ip:
+    salt: 891cbc9f58eff480d346b035bef268bbd9d30f41b7b34974285ef6c9a4aa9e0b3a701333b97b629657f670db49ff8f8d3d69517f83f26c280692ea8b445d87d49cd70cdb232050dbfd385293278f4d331d5bbd3f2925914a7f231e45e3998ed19817ac69ef6820cc561f28ea55820b6679020767c18b444468a30c58a964c8cd # 128 bit
