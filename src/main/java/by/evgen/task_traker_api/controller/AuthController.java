@@ -88,7 +88,7 @@ public class AuthController {
 
     @PutMapping("/password")
     public ResponseEntity<Void> changePassword(
-            @RequestBody UpdatePasswordRequest request,
+            @Valid @RequestBody UpdatePasswordRequest request,
             HttpServletRequest httpServletRequest,
             @CookieValue(name = "accessToken") String token,
             HttpServletResponse response
