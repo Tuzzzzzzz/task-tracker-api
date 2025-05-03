@@ -1,9 +1,6 @@
 package by.evgen.task_traker_api.controller;
 
-import by.evgen.task_traker_api.dto.security.AccessRefreshTokenPair;
-import by.evgen.task_traker_api.dto.security.SignInRequest;
-import by.evgen.task_traker_api.dto.security.SignUpRequest;
-import by.evgen.task_traker_api.dto.security.UserResponse;
+import by.evgen.task_traker_api.dto.security.*;
 import by.evgen.task_traker_api.service.UserService;
 import by.evgen.task_traker_api.service.security.TokenCookieService;
 import by.evgen.task_traker_api.service.security.UserAuthenticationService;
@@ -80,6 +77,23 @@ public class AuthController {
             HttpServletResponse response
     ) {
         AccessRefreshTokenPair tokens = userAuthenticationService.refreshTokens(httpServletRequest, token);
+
+        response.addHeader(HttpHeaders.SET_COOKIE,
+                tokenCookieService.createAccessCookie(tokens.accessToken()).toString());
+        response.addHeader(HttpHeaders.SET_COOKIE,
+                tokenCookieService.createRefreshCookie(tokens.refreshToken()).toString());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<Void> changePassword(
+            @RequestBody UpdatePasswordRequest request,
+            HttpServletRequest httpServletRequest,
+            @CookieValue(name = "accessToken") String token,
+            HttpServletResponse response
+    ){
+        AccessRefreshTokenPair tokens = userAuthenticationService.updatePassword(request, httpServletRequest, token);
 
         response.addHeader(HttpHeaders.SET_COOKIE,
                 tokenCookieService.createAccessCookie(tokens.accessToken()).toString());
