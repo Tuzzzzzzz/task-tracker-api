@@ -24,6 +24,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserAuthenticationService {
     private final UserService userService;
     private final UserRepo userRepo;
@@ -35,6 +36,7 @@ public class UserAuthenticationService {
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepo refreshTokenRepo;
 
+    @Transactional
     public UserResponse signUp(
             HttpServletRequest httpServletRequest,
             SignUpRequest request
@@ -48,7 +50,7 @@ public class UserAuthenticationService {
         return userService.create(user);
     }
 
-
+    @Transactional
     public AccessRefreshTokenPair signIn(
             HttpServletRequest httpServletRequest,
             SignInRequest request
@@ -70,6 +72,7 @@ public class UserAuthenticationService {
         );
     }
 
+    @Transactional
     public AccessRefreshTokenPair refreshTokens(
             HttpServletRequest httpServletRequest,
             String refreshToken
@@ -120,5 +123,15 @@ public class UserAuthenticationService {
                 jwtTokenService.generateAccessToken(userMapper.toResponse(user)),
                 refreshTokenService.generateToken(user.getId(), httpServletRequest)
         );
+    }
+
+    @Transactional
+    public void signOut(String accessToken) {
+        Long userId = jwtTokenService.extractUserId(accessToken);
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        refreshTokenService.deleteAllByUserId(userId);
     }
 }

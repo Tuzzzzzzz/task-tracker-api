@@ -5,10 +5,10 @@ spring:
   application:
     name: task-tracker-api
   datasource:
-    url: jdbc:postgresql://localhost:5432/task-tracker
+    url: jdbc:postgresql://localhost:5433/task-tracker
     username: postgres
-    password: 123
-    driver-class-name: org.postgresql.Driver
+    password: postgres
+#    driver-class-name: org.postgresql.Driver
   jpa:
     properties.hibernate:
       show_sql: true

@@ -23,6 +23,7 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final TaskMapper taskMapper;
 
+    @Transactional
     public TaskResponse create(Long stageId, TaskRequest taskRequest){
         Stage stage = stageRepo.findById(stageId)
                 .orElseThrow(() -> new StageNotFoundException(stageId));

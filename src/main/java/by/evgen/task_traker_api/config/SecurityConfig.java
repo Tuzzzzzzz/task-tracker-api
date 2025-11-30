@@ -35,34 +35,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors
-                        .configurationSource(request -> {
-                            CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(List.of(
-                                    "http://localhost:8080",      // Локальный Swagger
-                                    "https://petstore.swagger.io" // Публичный Swagger UI
-                            ));
-                            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                            config.setAllowedHeaders(List.of("*"));
-                            config.setAllowCredentials(true);
-                            return config;
-                        })
-                )
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/signup",
                                 "/api/auth/signin",
-                                "/api/auth/refresh",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**")
-                            .permitAll()
-
+                                "/api/auth/refresh"
+                        ).permitAll()
                         .requestMatchers("/api/admin/**")
                             .access(AuthorityAuthorizationManager.hasRole("ADMIN"))
-
                         .anyRequest()
                             .authenticated()
+
                 )
                 .userDetailsService(customUserDetailsService)
                 .exceptionHandling(e -> {

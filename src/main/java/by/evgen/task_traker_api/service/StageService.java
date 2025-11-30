@@ -28,7 +28,7 @@ public class StageService {
         Long currentMaxOrderNumber = stageRepo.findMaxOrderNumberByProjectId(projectId).orElse(0L);
         if (orderNumber == null) {
             orderNumber = currentMaxOrderNumber + 1;
-        } else if (orderNumber >= 1 && orderNumber <= currentMaxOrderNumber) {
+        } else if (orderNumber >= 1 && orderNumber <= currentMaxOrderNumber + 1) {
             stageRepo.findByProjectIdAndOrderNumberGreaterThanEqual(projectId, orderNumber)
                     .forEach(stage -> stage.setOrderNumber(stage.getOrderNumber() + 1));
         } else {
@@ -81,7 +81,7 @@ public class StageService {
 
         return optionalStage.map(stage -> {
                     stageRepo.delete(stage);
-                    deleteOrderNumber(stage.getProject().getId(), id);
+                    deleteOrderNumber(stage.getProject().getId(), stage.getOrderNumber());
                     stageRepo.flush();
                     return true;
                 })

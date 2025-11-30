@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RefreshTokenService {
     @Value("${security.jwt.refresh_token.expiration}")
     private Duration refreshTokenExpiration;
@@ -25,6 +27,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepo refreshTokenRepo;
 
+    @Transactional
     public String generateToken(Long userId, HttpServletRequest request) {
 
         RefreshToken refreshToken = RefreshToken.builder()
@@ -54,10 +57,12 @@ public class RefreshTokenService {
         return refreshTokenRepo.existsByUserIdAndTokenAndExpiryDateAfter(userId, token, Instant.now());
     }
 
+    @Transactional
     public void deleteAllByUserId(Long userId) {
         refreshTokenRepo.deleteAllByUserId(userId);
     }
 
+    @Transactional
     public void delete(String token, HttpServletRequest request){
         refreshTokenRepo.deleteByTokenAndDeviceInfoAndIp(
                 token,

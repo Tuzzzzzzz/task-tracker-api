@@ -6,17 +6,19 @@ import by.evgen.task_traker_api.dto.security.UserResponse;
 import by.evgen.task_traker_api.exception.UserNotFoundException;
 import by.evgen.task_traker_api.exception.UsernameAlreadyExistsException;
 import by.evgen.task_traker_api.mapper.UserMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserResponse create(User user) {
         if (userRepo.existsByUsername(user.getUsername())) {
             throw new UsernameAlreadyExistsException(user.getUsername());

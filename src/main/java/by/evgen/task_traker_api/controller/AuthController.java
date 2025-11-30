@@ -37,7 +37,7 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<Void> signIn(
             @RequestBody @Valid SignInRequest request,
             HttpServletRequest httpServletRequest,
             HttpServletResponse response
@@ -53,7 +53,12 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<Void> signOut(HttpServletResponse response){
+    public ResponseEntity<Void> signOut(
+            @CookieValue(name = "accessToken") String accessToken,
+            HttpServletResponse response){
+
+        userAuthenticationService.signOut(accessToken);
+
         response.addHeader(HttpHeaders.SET_COOKIE,
                 tokenCookieService.createExpiredAccessCookie().toString());
         response.addHeader(HttpHeaders.SET_COOKIE,
