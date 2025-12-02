@@ -22,7 +22,7 @@ REST API для управления проектами и задачами.
 
 ## Запуск
 ```bash
-# Запуск PostgreSQL и Redis
+# Запуск PostgreSQL
 docker compose up -d
 
 # Сборка и запуск приложения
